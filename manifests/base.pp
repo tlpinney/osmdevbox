@@ -8,7 +8,10 @@
    content => "Welcome to your OpenStreetMap Dev Box v0.1!"
  }
 
- 
+user { "vagrant":
+  ensure     => "present",
+  managehome => true,
+}
 
  package { "git-core":
   ensure => installed,
