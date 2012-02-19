@@ -1,1 +1,31 @@
-Vagrant setup for OSM website 
+Vagrant/EC@ setup for OSM website 
+
+
+gem install vagrant chef knife-ec2
+
+Get VirtualBox here 
+https://www.virtualbox.org/wiki/Downloads
+
+
+# initial set up
+mkdir ~/.chef 
+cp knife.rb ~/.chef 
+
+# Add environment variables to your profile (.profile or other for your machien) 
+export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXX
+export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXX
+   
+
+# show the available server you have 
+knife ec2 server list 
+
+
+# delete a server
+knife ec2 server delete i-XXXXXXXX
+
+
+# create a server 
+knife ec2 server create -r 'role[webserver]' -I ami-7000f019 -f m1.small
+
+# chef throws an error, working on that now
+
