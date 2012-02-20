@@ -5,7 +5,7 @@
  File { owner => 0, group => 0, mode => 0644 }
 
  file { '/etc/motd':
-   content => "Welcome to your OpenStreetMap Dev Box v0.1!"
+   content => "Welcome to your OpenStreetMap Dev Box v0.2!"
  }
 
 user { "vagrant":
@@ -101,7 +101,7 @@ package { "libsasl2-dev":
 
 
 
-exec { "Create puppet Git repo":
+exec { "osm_git":
   cwd => "/home/vagrant",
   user => "vagrant",
   command => "/usr/bin/git clone https://github.com/openstreetmap/openstreetmap-website.git",
@@ -111,21 +111,14 @@ exec { "Create puppet Git repo":
 
 
 exec { "Set up database":
-  cwd => "/home/vagrant",
-  user => "vagrant",
+  cwd => "/var/lib/postgresql",
+  user => "postgres",
   command => "/bin/sh /vagrant/manifests/osm_database.sh",
-  creates => "/home/vagrant/database_setup.log",
-  require => [Package["git-core"]],
+  creates => "/var/lib/postgresql/database_setup.log",
+  logoutput => "true",
+  require => [ Package["postgresql-contrib"] ]
 } 
 
-
-exec { "Set up gems and various things":
-  cwd => "/home/vagrant",
-  user => "vagrant",
-  command => "/bin/sh /vagrant/manifests/gems.sh",
-  creates => "/home/vagrant/gems_setup.log",
-  require => [Package["git-core"]],
-} 
 
 
 
@@ -137,23 +130,35 @@ file { "/etc/apache2/conf.d/passenger" :
 }
 
 file { "/home/vagrant/.profile" :
-   owner => root,
-   group => root,
+   owner => vagrant,
+   group => vagrant,
    source => "/vagrant/configs/profile",
    mode => 644
 }
 
 file { "/home/vagrant/openstreetmap-website/config/database.yml" :
-   owner => root,
-   group => root,
+   owner => vagrant,
+   group => vagrant,
    source => "/vagrant/configs/database.yml",
-   mode => 644
+   mode => 644,
+   require => [Exec["osm_git"]]
 }
 
 
 file { "/home/vagrant/openstreetmap-website/config/application.yml" :
-   owner => root,
-   group => root,
+   owner => vagrant,
+   group => vagrant,
    source => "/home/vagrant/openstreetmap-website/config/example.application.yml",
-   mode => 644
+   mode => 644,
+   require => [File["/home/vagrant/openstreetmap-website/config/database.yml"]]
+
 }
+
+exec { "Set up gems and various things":
+  cwd => "/home/vagrant",
+  user => "vagrant",
+  command => "/bin/sh /vagrant/manifests/gems.sh",
+  creates => "/home/vagrant/gems_setup.log",
+  logoutput => "true",
+  require => [File["/home/vagrant/openstreetmap-website/config/application.yml"]]
+} 

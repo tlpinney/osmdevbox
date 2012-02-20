@@ -1,11 +1,53 @@
-Vagrant/EC@ setup for OSM website 
+Vagrant/EC2 setup for OSM website 
 
 
-gem install vagrant chef knife-ec2
+
+* Vagrant Set Up
 
 Get VirtualBox here 
 https://www.virtualbox.org/wiki/Downloads
 
+sudo gem install vagrant 
+
+git clone https://github.com/tlpinney/osmdevbox.git 
+cd osmdevbox 
+vagrant up 
+
+# This will download the box image if its not already there 
+# It will start the vm, installing any neccesary software 
+
+# Note: it will get to a point at 
+# debug: Executing '/bin/sh /vagrant/manifests/gems.sh'
+# This may take a while because it needs to compile some things, be patient...
+
+
+
+
+vagrant ssh 
+
+# to ssh into the machine 
+
+This set up uses port forwarding for the virtual machine. 
+
+# to stop the vm
+vagrant halt 
+
+
+# to destroy the vm, use 
+vagrant destroy 
+
+# this allows you to reinstall the OS from scratch 
+
+
+
+
+
+
+
+
+
+
+* Chef Set Up
 
 # initial set up
 mkdir ~/.chef 

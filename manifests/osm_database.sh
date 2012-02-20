@@ -9,13 +9,11 @@ psql -d openstreetmap < /usr/share/postgresql/8.4/contrib/btree_gist.sql
 echo "alter role openstreetmap password 'openstreetmap'" | psql
 
 
-
-
 # hack to run without a password
 createuser vagrant -s 
 
 
-touch /home/vagrant/database_setup.log 
+touch /var/lib/postgresql/database_setup.log
 
 
 
