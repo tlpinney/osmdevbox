@@ -49,6 +49,8 @@ vagrant destroy
 
 * Chef Set Up
 
+# NOTE: This is currently in a state of flux and probably will not work 
+
 # initial set up
 mkdir ~/.chef 
 cp knife.rb ~/.chef 
