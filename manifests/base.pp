@@ -110,16 +110,6 @@ exec { "osm_git":
 } 
 
 
-exec { "Set up database":
-  cwd => "/var/lib/postgresql",
-  user => "postgres",
-  command => "/bin/sh /vagrant/manifests/osm_database.sh",
-  creates => "/var/lib/postgresql/database_setup.log",
-  logoutput => "true",
-  require => [ Package["postgresql-contrib"] ]
-} 
-
-
 
 
 file { "/etc/apache2/conf.d/passenger" :
@@ -154,11 +144,70 @@ file { "/home/vagrant/openstreetmap-website/config/application.yml" :
 
 }
 
-exec { "Set up gems and various things":
+
+exec { "Set up database":
+  cwd => "/var/lib/postgresql",
+  user => "postgres",
+  command => "/bin/sh /vagrant/manifests/osm_database.sh",
+  creates => "/var/lib/postgresql/database_setup.log",
+  logoutput => "true",
+  require => [ Package["postgresql-contrib"] ]
+} 
+
+
+
+
+exec { "passenger":
   cwd => "/home/vagrant",
   user => "vagrant",
-  command => "/bin/sh /vagrant/manifests/gems.sh",
-  creates => "/home/vagrant/gems_setup.log",
+  command => "sudo gem install passenger --no-ri --no-rdoc && touch /home/vagrant/passenger.log",
+  creates => "/home/vagrant/passenger.log",
   logoutput => "true",
+  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
   require => [File["/home/vagrant/openstreetmap-website/config/application.yml"]]
 } 
+
+exec { "pfusion":
+  cwd => "/home/vagrant",
+  user => "vagrant",
+  command => "expect /vagrant/manifests/pfusion.exp && touch /home/vagrant/pfusion.log",
+  creates => "/home/vagrant/pfusion.log",
+  logoutput => "true",
+  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+  require => [Exec["passenger"]]
+} 
+
+exec { "bundle_gem":
+  cwd => "/home/vagrant",
+  user => "vagrant",
+  command => "sudo gem install bundle --no-ri --no-rdoc; touch /home/vagrant/bundle_gem.log",
+  creates => "/home/vagrant/bundle_gem.log",
+  logoutput => "true",
+  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+  require => [Exec["pfusion"]]
+} 
+
+exec { "bundle":
+  cwd => "/home/vagrant/openstreetmap-website",
+  user => "vagrant",
+  command => "sudo bundle install && touch /home/vagrant/bundle.log",
+  creates => "/home/vagrant/bundle.log",
+  logoutput => "true",
+  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+  require => [Exec["bundle_gem"]]
+} 
+
+exec { "rake_migrate":
+  cwd => "/home/vagrant/openstreetmap-website",
+  user => "vagrant",
+  command => "rake db:migrate && touch /home/vagrant/rake_migrate.log",
+  creates => "/home/vagrant/rake_migrate.log",
+  logoutput => "true",
+  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+  require => [Exec["bundle"]]
+} 
+
+
+
+
+

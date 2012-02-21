@@ -17,7 +17,7 @@ config.vm.forward_port(80, 9080)
 config.vm.forward_port(3000, 3000)
 
 
-  config.vm.provision :puppet, :options => "--verbose --debug" do |puppet|
+  config.vm.provision :puppet, :options => "--verbose" do |puppet|
     puppet.manifests_path = "manifests"
     puppet.manifest_file  = "base.pp"
   end

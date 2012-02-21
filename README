@@ -16,18 +16,17 @@ vagrant up
 # This will download the box image if its not already there 
 # It will start the vm, installing any neccesary software 
 
-# Note: it will get to a point at 
-# debug: Executing '/bin/sh /vagrant/manifests/gems.sh'
-# This may take a while because it needs to compile some things, be patient...
-
-
-
-
 vagrant ssh 
 
-# to ssh into the machine 
+# start up the development server 
+cd openstreetmap-website
+rails server 
 
-This set up uses port forwarding for the virtual machine. 
+# on your host machine go to 
+http://127.0.0.1:3000
+
+
+
 
 # to stop the vm
 vagrant halt 
