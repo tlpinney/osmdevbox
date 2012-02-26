@@ -1,0 +1,7 @@
+Convert README to markdown format.
+Create chef and puppet payload for ec2 instances.  
+Create a 32 bit ubuntu maverick osmdevbox (which can run a m1.small instance) 
+Create a 64 bit CentOS osmdevbox.
+
+ 
+
