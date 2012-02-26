@@ -47,6 +47,8 @@ http://127.0.0.1:9080
 # to access the leaflet osm debugger 
 # currently this is stub code tha shows an osm map 
 
+# there is a bug where the apache2 server will need to be restarted manually 
+# if the vm is installe from scratch...
 
 
 
