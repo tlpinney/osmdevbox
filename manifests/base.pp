@@ -99,6 +99,17 @@ package { "libsasl2-dev":
   ensure => installed,
 }
 
+package { "wget" :
+  ensure => installed,
+}
+
+
+service { "apache2":
+    enable => true,
+    ensure => running,
+    subscribe => [ File["/etc/apache2/conf.d/passenger"], File["/etc/apache2/sites-available/default"], Package["apache2"] ],
+}
+
 
 
 exec { "osm_git":
@@ -116,8 +127,18 @@ file { "/etc/apache2/conf.d/passenger" :
    owner => root,
    group => root,
    source => "/vagrant/configs/passenger",
-   mode => 644
+   mode => 644,
+   require => [Package["apache2"]],
 }
+
+file { "/etc/apache2/sites-available/default" :
+   owner => root,
+   group => root,
+   source => "/vagrant/configs/default",
+   mode => 644,
+   require => [Package["apache2"]],
+}
+
 
 file { "/home/vagrant/.profile" :
    owner => vagrant,
@@ -207,7 +228,38 @@ exec { "rake_migrate":
   require => [Exec["bundle"]]
 } 
 
+#exec { "node_install":
+#  cwd => "/home/vagrant",
+#  user => "vagrant",
+#  command => "wget http://nodejs.org/dist/v0.6.11/node-v0.6.11.tar.gz && tar xzf node-v0.6.11.tar.gz && cd node-v0.6.11 && ./configure && make && sudo make install && touch /home/vagrant/node_install.log",
+#  creates => "/home/vagrant/node_install.log",
+#  logoutput => "true",
+#  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+#  require => [Exec["rake_migrate"]]
+#} 
+
+#exec { "npm_install":
+#  cwd => "/home/vagrant",
+#  user => "vagrant",
+#  command => "sudo curl http://npmjs.org/install.sh | sudo sh && touch /home/vagrant/npm_install.log",
+#  creates => "/home/vagrant/npm_install.log",
+#  logoutput => "true",
+#  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+#  require => [Exec["node_install"]]
+#} 
 
 
+#exec { "install_wax":
+#  cwd => "/home/vagrant",
+#  user => "vagrant",
+#  command => "git clone https://github.com/mapbox/wax.git && cd wax && touch install_wax.log",
+#  creates => "/home/vagrant/install_wax.log",
+#  logoutput => "true",
+#  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+#  require => [Exec["npm_install"]]
+#} 
 
 
+# npm install -g jake
+# npm install jshint
+# npm install uglify-js
