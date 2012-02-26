@@ -7,6 +7,22 @@ Vagrant/EC2 setup for OSM website
 Get VirtualBox here 
 https://www.virtualbox.org/wiki/Downloads
 
+It is recommended to use 4.1.8 instead of installing from a package manager 
+because the guest modifications on the bare vm are made for that version.
+
+Caveats:
+
+Make sure you have virtualization extensions enabled in your BIOS. It may not 
+run if this is not set up, and you will want to be running on a 64bit system.
+
+Running ubuntu 11.10 I ran into an issue with current user not being in 
+"vboxusers" (so it failed to start. If your vm hangs when running "vagrant up",
+open up the virtualbox program and try to run the virtual machine inside of 
+there. It may give you more debugging messages.
+
+
+Steps:
+
 sudo gem install vagrant 
 
 git clone https://github.com/tlpinney/osmdevbox.git 
@@ -41,25 +57,22 @@ vagrant destroy
 
 
 
-
-
-
-
-
 * Chef Set Up
 
 # NOTE: This is currently in a state of flux and probably will not work 
+
+sudo gem install chef knife-ec2 
 
 # initial set up
 mkdir ~/.chef 
 cp knife.rb ~/.chef 
 
-# Add environment variables to your profile (.profile or other for your machien) 
+# Add environment variables to your profile (.profile or .bash_profile for your machine) 
 export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXX
    
 
-# show the available server you have 
+# show the available servers you have 
 knife ec2 server list 
 
 
