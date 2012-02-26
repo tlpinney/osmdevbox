@@ -40,6 +40,13 @@ rails server
 
 # on your host machine go to 
 http://127.0.0.1:3000
+# to access the rails port 
+
+# go to
+http://127.0.0.1:9080 
+# to access the leaflet osm debugger 
+# currently this is stub code tha shows an osm map 
+
 
 
 
@@ -52,6 +59,13 @@ vagrant halt
 vagrant destroy 
 
 # this allows you to reinstall the OS from scratch 
+
+# if you want to get updates but not reinstall the OS you can update from git
+# then do 
+
+vagrant provision 
+
+# this will update puppet tasks but not have to reinstall everything from scratch
 
 
 
