@@ -13,7 +13,13 @@ config.vm.customize [
   "--memory", "2048"
 ] 
 
+# apache
 config.vm.forward_port(80, 9080)
+
+# geodjango 
+config.vm.forward_port(9081, 9081)
+
+# rails port
 config.vm.forward_port(3000, 3000)
 
 
