@@ -107,7 +107,7 @@ package { "wget" :
 service { "apache2":
     enable => true,
     ensure => running,
-    subscribe => [ File["/etc/apache2/conf.d/passenger"], File["/etc/apache2/sites-available/default"], Package["apache2"] ],
+    subscribe => [ Package["apache2"] ],
 }
 
 
@@ -119,6 +119,16 @@ exec { "osm_git":
   creates => "/home/vagrant/openstreetmap-website",
   require => [Package["git-core"]],
 } 
+
+# apply local patches
+file { "/home/vagrant/openstreetmap-website/Gemfile.lock":
+   owner => vagrant,
+   group => vagrant,
+   source => "/vagrant/patches/Gemfile.lock",
+   mode => 644,
+  require => [Exec["osm_git"]],
+} 
+
 
 
 
