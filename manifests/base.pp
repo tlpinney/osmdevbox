@@ -228,26 +228,6 @@ exec { "rake_migrate":
   require => [Exec["bundle"]]
 } 
 
-#exec { "node_install":
-#  cwd => "/home/vagrant",
-#  user => "vagrant",
-#  command => "wget http://nodejs.org/dist/v0.6.11/node-v0.6.11.tar.gz && tar xzf node-v0.6.11.tar.gz && cd node-v0.6.11 && ./configure && make && sudo make install && touch /home/vagrant/node_install.log",
-#  creates => "/home/vagrant/node_install.log",
-#  logoutput => "true",
-#  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-#  require => [Exec["rake_migrate"]]
-#} 
-
-#exec { "npm_install":
-#  cwd => "/home/vagrant",
-#  user => "vagrant",
-#  command => "sudo curl http://npmjs.org/install.sh | sudo sh && touch /home/vagrant/npm_install.log",
-#  creates => "/home/vagrant/npm_install.log",
-#  logoutput => "true",
-#  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-#  require => [Exec["node_install"]]
-#} 
-
 
 #exec { "install_wax":
 #  cwd => "/home/vagrant",
@@ -260,6 +240,3 @@ exec { "rake_migrate":
 #} 
 
 
-# npm install -g jake
-# npm install jshint
-# npm install uglify-js
