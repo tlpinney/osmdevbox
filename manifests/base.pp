@@ -121,13 +121,15 @@ exec { "osm_git":
 } 
 
 # apply local patches
-file { "/home/vagrant/openstreetmap-website/Gemfile.lock":
-   owner => vagrant,
-   group => vagrant,
-   source => "/vagrant/patches/Gemfile.lock",
-   mode => 644,
-  require => [Exec["osm_git"]],
-} 
+
+# patch not needed anymore
+#file { "/home/vagrant/openstreetmap-website/Gemfile.lock":
+#   owner => vagrant,
+#   group => vagrant,
+#   source => "/vagrant/patches/Gemfile.lock",
+#   mode => 644,
+#  require => [Exec["osm_git"]],
+#} 
 
 
 
