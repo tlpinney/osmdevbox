@@ -13,6 +13,23 @@ user { "vagrant":
   managehome => true,
 }
 
+Exec["/usr/bin/apt-get update -y"] -> Package <| |>
+Exec["/usr/bin/apt-get upgrade -y"] -> Package <| |>
+
+
+exec { "/usr/bin/apt-get update -y":
+  user => "root",
+  timeout => 3600,
+}
+
+
+exec { "/usr/bin/apt-get upgrade -y":
+  user => "root",
+  timeout => 3600,
+}
+
+
+
  package { "git-core":
   ensure => installed,
  }
@@ -206,7 +223,8 @@ exec { "pfusion":
   command => "expect /vagrant/manifests/pfusion.exp && touch /home/vagrant/pfusion.log",
   creates => "/home/vagrant/pfusion.log",
   logoutput => "true",
-  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
+  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"],
+  timeout => 3600,  
   require => [Exec["passenger"]]
 } 
 
