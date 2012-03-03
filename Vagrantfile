@@ -3,13 +3,13 @@
 
 Vagrant::Config.run do |config|
 
-  config.vm.box = "maverick64"
-  config.vm.box_url = "https://s3.amazonaws.com/osmdevbox/maverick64.box"
+  config.vm.box = "CentOS-5.7-x86_64"
+  config.vm.box_url = "https://s3.amazonaws.com/osmdevbox/CentOS-5.7-x86_64.box"
  
 
 config.vm.customize [
   "modifyvm", :id,
-  "--name", "OpenStreetMap Dev VM v0.2",
+  "--name", "OpenStreetMap CentOS Dev VM v0.5",
   "--memory", "2048"
 ] 
 

@@ -5,7 +5,7 @@
  File { owner => 0, group => 0, mode => 0644 }
 
  file { '/etc/motd':
-   content => "Welcome to your OpenStreetMap Dev Box v0.2!"
+   content => "Welcome to your OpenStreetMap Dev Box v0.!"
  }
 
 user { "vagrant":
@@ -13,94 +13,131 @@ user { "vagrant":
   managehome => true,
 }
 
-Exec["/usr/bin/apt-get update -y"] -> Package <| |>
-Exec["/usr/bin/apt-get upgrade -y"] -> Package <| |>
+Exec["/usr/bin/yum update -y"] -> Package <| |>
+
+# memcached build dies for some reason without this 
+file { '/usr/bin/ruby':
+      ensure => link,
+      target => '/opt/ruby/bin/ruby',
+    }
 
 
-exec { "/usr/bin/apt-get update -y":
-  user => "root",
-  timeout => 3600,
+file { "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL":
+     owner => root,
+     group => root,
+     source => "/vagrant/configs/RPM-GPG-KEY-EPEL",
+}
+
+file { "/etc/yum.repos.d/epel.repo":
+   owner => root,
+   group => root,
+   source => "/vagrant/configs/epel.repo",
+   mode => 644,
+   require => File["/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL"]
 }
 
 
-exec { "/usr/bin/apt-get upgrade -y":
+exec { "/usr/bin/yum update -y":
   user => "root",
   timeout => 3600,
+  require => File['/etc/yum.repos.d/epel.repo'],
 }
 
 
 
- package { "git-core":
+
+ package { "vim-minimal":
   ensure => installed,
  }
 
- package { "vim":
+package { "postgresql84":
+  ensure => installed,
+}
+
+package { "postgresql84-devel":
+  ensure => installed,
+}
+
+
+package { "postgresql84-contrib":
+  ensure => installed,
+}
+
+
+package { "postgresql84-server":
+  ensure => installed,
+}
+
+exec { "/usr/bin/initdb /var/lib/pgsql/data":
+  cwd => "/var/lib/pgsql",
+  user => "postgres",
+  command => "/usr/bin/initdb /var/lib/pgsql/data",
+  creates => "/var/lib/pgsql/data/PG_VERSION",
+  logoutput => "true",
+  require => [Package["postgresql84-server"]]
+}   
+
+service { "postgresql":
+    enable => true,
+    ensure => running,
+    subscribe => [ Exec["/usr/bin/initdb /var/lib/pgsql/data"] ],
+}
+
+
+package { "perl":
+  ensure => installed,
+}
+
+
+
+# package { "ruby":
+#  ensure => installed,
+# }
+
+package { "git":
+  ensure => installed,
+}
+
+ package { "libxml2-devel":
+ ensure => installed,
+ }
+
+ package { "libxslt-devel":
+ ensure => installed,
+ }
+
+# package { "ruby-dev":
+# ensure => installed,
+# }
+
+ package { "httpd-devel":
+ ensure => installed,
+ }
+
+ package { "ImageMagick":
   ensure => installed,
  }
 
- package { "postgresql-contrib":
-  ensure => installed,
- }
 
-
- package { "ruby":
-  ensure => installed,
- }
-
- package { "rdoc":
-  ensure => installed,
- }
-
- package { "ri":
-  ensure => installed,
- }
-
- package { "libpq-dev":
-  ensure => installed,
- }
-
- package { "libxml2-dev":
+ package { "ImageMagick-devel":
  ensure => installed,
  }
 
- package { "libxslt1-dev":
- ensure => installed,
- }
 
- package { "ruby-dev":
- ensure => installed,
- }
 
- package { "apache2-dev":
- ensure => installed,
- }
-
- package { "libmagick9-dev":
- ensure => installed,
- }
-
-package { "build-essential":
- ensure => installed,
- }
-
-package { "libopenssl-ruby":
- ensure => installed,
- }
+#package { "libopenssl-ruby":
+# ensure => installed,
+# }
 
 package { "subversion":
  ensure => installed,
  }
 
-package { "apache2":
+package { "httpd":
  ensure => installed,
  }
 
-
-package { "postgresql": 
- ensure => installed,
-}
-
-package { "libcurl4-openssl-dev":
+package { "curl-devel":
   ensure => installed,
 }
 
@@ -108,11 +145,11 @@ package { "expect":
   ensure => installed,
 }
 
-package { "expect-dev":
+package { "expect-devel":
   ensure => installed,
 }
 
-package { "libsasl2-dev":
+package { "cyrus-sasl-devel":
   ensure => installed,
 }
 
@@ -121,10 +158,10 @@ package { "wget" :
 }
 
 
-service { "apache2":
+service { "httpd":
     enable => true,
     ensure => running,
-    subscribe => [ Package["apache2"] ],
+    subscribe => [ Package["httpd"] ],
 }
 
 
@@ -132,41 +169,27 @@ service { "apache2":
 exec { "osm_git":
   cwd => "/home/vagrant",
   user => "vagrant",
-  command => "/usr/bin/git clone https://github.com/openstreetmap/openstreetmap-website.git",
+  command => "/usr/bin/git clone git://github.com/openstreetmap/openstreetmap-website.git",
   creates => "/home/vagrant/openstreetmap-website",
-  require => [Package["git-core"]],
+  require => [Package["git"]],
 } 
 
-# apply local patches
 
-# patch not needed anymore
-#file { "/home/vagrant/openstreetmap-website/Gemfile.lock":
-#   owner => vagrant,
-#   group => vagrant,
-#   source => "/vagrant/patches/Gemfile.lock",
-#   mode => 644,
-#  require => [Exec["osm_git"]],
-#} 
-
-
-
-
-
-file { "/etc/apache2/conf.d/passenger" :
+file { "/etc/httpd/conf.d/passenger" :
    owner => root,
    group => root,
    source => "/vagrant/configs/passenger",
    mode => 644,
-   require => [Package["apache2"]],
+   require => [Package["httpd"]],
 }
 
-file { "/etc/apache2/sites-available/default" :
-   owner => root,
-   group => root,
-   source => "/vagrant/configs/default",
-   mode => 644,
-   require => [Package["apache2"]],
-}
+#file { "/etc/apache2/sites-available/default" :
+#   owner => root,
+#   group => root,
+#   source => "/vagrant/configs/default",
+#   mode => 644,
+#   require => [Package["httpd"]],
+#}
 
 
 file { "/home/vagrant/.profile" :
@@ -191,17 +214,16 @@ file { "/home/vagrant/openstreetmap-website/config/application.yml" :
    source => "/home/vagrant/openstreetmap-website/config/example.application.yml",
    mode => 644,
    require => [File["/home/vagrant/openstreetmap-website/config/database.yml"]]
-
 }
 
 
 exec { "Set up database":
-  cwd => "/var/lib/postgresql",
+  cwd => "/var/lib/pgsql",
   user => "postgres",
   command => "/bin/sh /vagrant/manifests/osm_database.sh",
-  creates => "/var/lib/postgresql/database_setup.log",
+  creates => "/var/lib/pgsql/database_setup.log",
   logoutput => "true",
-  require => [ Package["postgresql-contrib"] ]
+  require => Service["postgresql"]
 } 
 
 
@@ -213,6 +235,7 @@ exec { "passenger":
   command => "sudo gem install passenger --no-ri --no-rdoc && touch /home/vagrant/passenger.log",
   creates => "/home/vagrant/passenger.log",
   logoutput => "true",
+  timeout => 3600,
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
   require => [File["/home/vagrant/openstreetmap-website/config/application.yml"]]
 } 
@@ -244,6 +267,7 @@ exec { "bundle":
   command => "sudo bundle install && touch /home/vagrant/bundle.log",
   creates => "/home/vagrant/bundle.log",
   logoutput => "true",
+  timeout => 3600, 
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
   require => [Exec["bundle_gem"]]
 } 
@@ -259,14 +283,5 @@ exec { "rake_migrate":
 } 
 
 
-#exec { "install_wax":
-#  cwd => "/home/vagrant",
-#  user => "vagrant",
-#  command => "git clone https://github.com/mapbox/wax.git && cd wax && touch install_wax.log",
-#  creates => "/home/vagrant/install_wax.log",
-#  logoutput => "true",
-#  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-#  require => [Exec["npm_install"]]
-#} 
 
 
