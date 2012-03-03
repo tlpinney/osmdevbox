@@ -21,6 +21,25 @@ file { '/usr/bin/ruby':
       target => '/opt/ruby/bin/ruby',
     }
 
+file { '/usr/bin/gem':
+      ensure => link,
+      target => '/opt/ruby/bin/gem',
+    }
+
+file { '/usr/bin/passenger-install-apache2-module':
+      ensure => link,
+      target => '/opt/ruby/bin/passenger-install-apache2-module',
+    }
+
+file { '/usr/bin/bundle':
+      ensure => link,
+      target => '/opt/ruby/bin/bundle',
+    }
+
+file { '/usr/bin/rake':
+      ensure => link,
+      target => '/opt/ruby/bin/rake',
+    }
 
 file { "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL":
      owner => root,

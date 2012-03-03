@@ -5,7 +5,7 @@ createuser openstreetmap -s
 createdb -E UTF8 -O openstreetmap openstreetmap -T template0
 createdb -E UTF8 -O openstreetmap osm_test -T template0
 createdb -E UTF8 -O openstreetmap osm -T template0
-psql -d openstreetmap < /usr/share/pgsql/contrib/contrib/btree_gist.sql
+psql -d openstreetmap < /usr/share/pgsql/contrib/btree_gist.sql
 echo "alter role openstreetmap password 'openstreetmap'" | psql
 
 

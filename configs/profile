@@ -21,4 +21,4 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-export PATH=$PATH:/usr/lib/ruby/gems/1.8/bin
+export PATH=$PATH:/opt/ruby/lib/ruby/gems/1.8/bin
