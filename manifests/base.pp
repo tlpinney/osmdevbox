@@ -29,6 +29,33 @@ exec { "/usr/bin/apt-get upgrade -y":
 }
 
 
+file { '/usr/bin/ruby':
+      ensure => link,
+      target => '/opt/ruby/bin/ruby',
+    }
+
+file { '/usr/bin/gem':
+      ensure => link,
+      target => '/usr/bin/gem1.8',
+    }
+
+
+file { '/usr/bin/passenger-install-apache2-module':
+      ensure => link,
+      target => '/opt/ruby/bin/passenger-install-apache2-module',
+    }
+
+file { '/usr/bin/bundle':
+      ensure => link,
+      target => '/opt/ruby/bin/bundle',
+    }
+
+file { '/usr/bin/rake':
+      ensure => link,
+      target => '/opt/ruby/bin/rake',
+    }
+
+
 
  package { "git-core":
   ensure => installed,
@@ -204,6 +231,18 @@ exec { "Set up database":
   require => [ Package["postgresql-contrib"] ]
 } 
 
+# install ruby gems 
+exec { "gem_update":  
+  cwd => "/home/vagrant",
+  user => "vagrant",
+  command => "sh /vagrant/manifests/gem_update.sh && touch /home/vagrant/gem_update.log",
+  creates => "/home/vagrant/gem_update.log",
+  logoutput => "true",
+  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"],
+  require => [File["/home/vagrant/openstreetmap-website/config/application.yml"]]
+}
+
+
 
 
 
@@ -214,7 +253,7 @@ exec { "passenger":
   creates => "/home/vagrant/passenger.log",
   logoutput => "true",
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-  require => [File["/home/vagrant/openstreetmap-website/config/application.yml"]]
+  require => [Exec["gem_update"]]
 } 
 
 exec { "pfusion":
