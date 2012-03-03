@@ -218,6 +218,15 @@ file { "/home/vagrant/.profile" :
    mode => 644
 }
 
+file { "/home/vagrant/.bashrc" :
+   owner => vagrant,
+   group => vagrant,
+   source => "/vagrant/configs/bashrc",
+   mode => 644
+}
+
+
+
 file { "/home/vagrant/openstreetmap-website/config/database.yml" :
    owner => vagrant,
    group => vagrant,
