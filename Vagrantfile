@@ -3,15 +3,15 @@
 
 Vagrant::Config.run do |config|
 
-  config.vm.box = "maverick64"
-  config.vm.box_url = "https://s3.amazonaws.com/osmdevbox/maverick64.box"
+  config.vm.box = "lucid32"
+  config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
  
 
-config.vm.customize [
-  "modifyvm", :id,
-  "--name", "OpenStreetMap Dev VM v0.2",
-  "--memory", "2048"
-] 
+#config.vm.customize [
+#  "modifyvm", :id,
+#  "--name", "OpenStreetMap Dev VM v0.2",
+#  "--memory", "2048"
+#] 
 
 # apache
 config.vm.forward_port(80, 9080)
