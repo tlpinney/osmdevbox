@@ -1,12 +1,12 @@
- group { "puppet":
-   ensure => "present",
- }
+group { "puppet":
+  ensure => "present",
+}
 
- File { owner => 0, group => 0, mode => 0644 }
+File { owner => 0, group => 0, mode => 0644 }
 
- file { '/etc/motd':
-   content => "Welcome to your OpenStreetMap Dev Box v0.2!"
- }
+file { '/etc/motd':
+  content => "Welcome to your OpenStreetMap Dev Box v0.2!"
+}
 
 user { "vagrant":
   ensure     => "present",
@@ -16,88 +16,83 @@ user { "vagrant":
 Exec["/usr/bin/apt-get update -y"] -> Package <| |>
 Exec["/usr/bin/apt-get upgrade -y"] -> Package <| |>
 
-
 exec { "/usr/bin/apt-get update -y":
   user => "root",
   timeout => 3600,
 }
-
 
 exec { "/usr/bin/apt-get upgrade -y":
   user => "root",
   timeout => 3600,
 }
 
-
-
- package { "git-core":
+package { "git-core":
   ensure => installed,
- }
+}
 
- package { "vim":
+package { "vim":
   ensure => installed,
- }
+}
 
- package { "postgresql-contrib":
+package { "postgresql-contrib":
   ensure => installed,
- }
+}
 
 
- package { "ruby":
+package { "ruby":
   ensure => installed,
- }
+}
 
- package { "rdoc":
+package { "rdoc":
   ensure => installed,
- }
+}
 
- package { "ri":
+package { "ri":
   ensure => installed,
- }
+}
 
- package { "libpq-dev":
+package { "libpq-dev":
   ensure => installed,
- }
+}
 
- package { "libxml2-dev":
- ensure => installed,
- }
+package { "libxml2-dev":
+  ensure => installed,
+}
 
- package { "libxslt1-dev":
- ensure => installed,
- }
+package { "libxslt1-dev":
+  ensure => installed,
+}
 
- package { "ruby-dev":
- ensure => installed,
- }
+package { "ruby-dev":
+  ensure => installed,
+}
 
- package { "apache2-dev":
- ensure => installed,
- }
+package { "apache2-dev":
+  ensure => installed,
+}
 
- package { "libmagick9-dev":
- ensure => installed,
- }
+package { "libmagick9-dev":
+  ensure => installed,
+}
 
 package { "build-essential":
- ensure => installed,
- }
+  ensure => installed,
+}
 
 package { "libopenssl-ruby":
- ensure => installed,
- }
+  ensure => installed,
+}
 
 package { "subversion":
- ensure => installed,
- }
+  ensure => installed,
+}
 
 package { "apache2":
- ensure => installed,
- }
-
+  ensure => installed,
+}
 
 package { "postgresql": 
- ensure => installed,
+  ensure => installed,
 }
 
 package { "libcurl4-openssl-dev":
@@ -120,14 +115,11 @@ package { "wget" :
   ensure => installed,
 }
 
-
 service { "apache2":
-    enable => true,
-    ensure => running,
-    subscribe => [ Package["apache2"] ],
+  enable => true,
+  ensure => running,
+  subscribe => [ Package["apache2"] ],
 }
-
-
 
 exec { "osm_git":
   cwd => "/home/vagrant",
@@ -135,65 +127,46 @@ exec { "osm_git":
   command => "/usr/bin/git clone https://github.com/openstreetmap/openstreetmap-website.git",
   creates => "/home/vagrant/openstreetmap-website",
   require => [Package["git-core"]],
-} 
-
-# apply local patches
-
-# patch not needed anymore
-#file { "/home/vagrant/openstreetmap-website/Gemfile.lock":
-#   owner => vagrant,
-#   group => vagrant,
-#   source => "/vagrant/patches/Gemfile.lock",
-#   mode => 644,
-#  require => [Exec["osm_git"]],
-#} 
-
-
-
-
+}
 
 file { "/etc/apache2/conf.d/passenger" :
-   owner => root,
-   group => root,
-   source => "/vagrant/configs/passenger",
-   mode => 644,
-   require => [Package["apache2"]],
+  owner => root,
+  group => root,
+  source => "/vagrant/configs/passenger",
+  mode => 644,
+  require => [Package["apache2"]],
 }
 
 file { "/etc/apache2/sites-available/default" :
-   owner => root,
-   group => root,
-   source => "/vagrant/configs/default",
-   mode => 644,
-   require => [Package["apache2"]],
+  owner => root,
+  group => root,
+  source => "/vagrant/configs/default",
+  mode => 644,
+  require => [Package["apache2"]],
 }
 
-
 file { "/home/vagrant/.profile" :
-   owner => vagrant,
-   group => vagrant,
-   source => "/vagrant/configs/profile",
-   mode => 644
+  owner => vagrant,
+  group => vagrant,
+  source => "/vagrant/configs/profile",
+  mode => 644
 }
 
 file { "/home/vagrant/openstreetmap-website/config/database.yml" :
-   owner => vagrant,
-   group => vagrant,
-   source => "/vagrant/configs/database.yml",
-   mode => 644,
-   require => [Exec["osm_git"]]
+  owner => vagrant,
+  group => vagrant,
+  source => "/vagrant/configs/database.yml",
+  mode => 644,
+  require => [Exec["osm_git"]]
 }
-
 
 file { "/home/vagrant/openstreetmap-website/config/application.yml" :
-   owner => vagrant,
-   group => vagrant,
-   source => "/home/vagrant/openstreetmap-website/config/example.application.yml",
-   mode => 644,
-   require => [File["/home/vagrant/openstreetmap-website/config/database.yml"]]
-
+  owner => vagrant,
+  group => vagrant,
+  source => "/home/vagrant/openstreetmap-website/config/example.application.yml",
+  mode => 644,
+  require => [File["/home/vagrant/openstreetmap-website/config/database.yml"]]
 }
-
 
 exec { "Set up database":
   cwd => "/var/lib/postgresql",
@@ -202,10 +175,7 @@ exec { "Set up database":
   creates => "/var/lib/postgresql/database_setup.log",
   logoutput => "true",
   require => [ Package["postgresql-contrib"] ]
-} 
-
-
-
+}
 
 exec { "passenger":
   cwd => "/home/vagrant",
@@ -215,7 +185,7 @@ exec { "passenger":
   logoutput => "true",
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
   require => [File["/home/vagrant/openstreetmap-website/config/application.yml"]]
-} 
+}
 
 exec { "pfusion":
   cwd => "/home/vagrant",
@@ -226,7 +196,7 @@ exec { "pfusion":
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"],
   timeout => 3600,  
   require => [Exec["passenger"]]
-} 
+}
 
 exec { "bundle_gem":
   cwd => "/home/vagrant",
@@ -256,17 +226,4 @@ exec { "rake_migrate":
   logoutput => "true",
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
   require => [Exec["bundle"]]
-} 
-
-
-#exec { "install_wax":
-#  cwd => "/home/vagrant",
-#  user => "vagrant",
-#  command => "git clone https://github.com/mapbox/wax.git && cd wax && touch install_wax.log",
-#  creates => "/home/vagrant/install_wax.log",
-#  logoutput => "true",
-#  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-#  require => [Exec["npm_install"]]
-#} 
-
-
+}
