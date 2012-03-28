@@ -59,44 +59,42 @@ To stop the vm
 To destroy the vm, use 
     vagrant destroy 
 
-# this allows you to reinstall the OS from scratch 
+...this allows you to reinstall the OS from scratch 
 
-# if you want to get updates but not reinstall the OS you can update from git
-# then do 
+If you want to get updates but not reinstall the OS you can update from git then do 
 
-vagrant provision 
+    vagrant provision 
 
-# this will update puppet tasks but not have to reinstall everything from scratch
+...this will update puppet tasks but not have to reinstall everything from scratch
 
+Chef Set Up
+===========
 
+NOTE: This is currently in a state of flux and probably will not work 
 
+    sudo gem install chef knife-ec2 
 
+Initial set up:
 
-* Chef Set Up
+    mkdir ~/.chef 
+    cp knife.rb ~/.chef 
 
-# NOTE: This is currently in a state of flux and probably will not work 
+Add environment variables to your profile (.profile or .bash_profile for your machine) 
 
-sudo gem install chef knife-ec2 
+    export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXX
+    export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXX
 
-# initial set up
-mkdir ~/.chef 
-cp knife.rb ~/.chef 
+Show the available servers you have 
 
-# Add environment variables to your profile (.profile or .bash_profile for your machine) 
-export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXX
-export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXX
-   
+    knife ec2 server list 
 
-# show the available servers you have 
-knife ec2 server list 
+Delete a server
 
+    knife ec2 server delete i-XXXXXXXX
 
-# delete a server
-knife ec2 server delete i-XXXXXXXX
+Create a server 
 
+    knife ec2 server create -r 'role[webserver]' -I ami-7000f019 -f m1.small
 
-# create a server 
-knife ec2 server create -r 'role[webserver]' -I ami-7000f019 -f m1.small
-
-# chef throws an error, working on that now
+Chef throws an error, working on that now
 
