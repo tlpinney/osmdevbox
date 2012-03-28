@@ -227,3 +227,12 @@ exec { "rake_migrate":
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
   require => [Exec["bundle"]]
 }
+
+exec { "set_up_osm_website_directories":
+  cwd => "/home/vagrant",
+  user => "vagrant",
+  command => "/bin/sh /vagrant/manifests/osm_directories_setup.sh && touch /home/vagrant/osm_directories_setup.log",
+  creates => "/home/vagrant/osm_directories_setup.log",
+  logoutput => "true",
+  require => [ Exec["rake_migrate"] ]
+}
