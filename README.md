@@ -4,8 +4,7 @@ Vagrant Set Up
 Get VirtualBox here 
 https://www.virtualbox.org/wiki/Downloads
 
-It is recommended to use 4.1.8 instead of installing from a package manager 
-because the guest modifications on the bare vm are made for that version.
+It is recommended installing it from the web site with the latest stable version.
 
 Caveats:
 
