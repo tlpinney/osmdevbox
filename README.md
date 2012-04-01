@@ -6,27 +6,25 @@ https://www.virtualbox.org/wiki/Downloads
 
 It is recommended installing it from the web site with the latest stable version.
 
-Caveats:
+Caveats: Check CAVEATS file
 
-Make sure you have virtualization extensions enabled in your BIOS. It may not 
-run if this is not set up, and you will want to be running on a 64bit system.
-
-Running ubuntu 11.10 I ran into an issue with current user not being in 
-"vboxusers" (so it failed to start. If your vm hangs when running "vagrant up",
-open up the virtualbox program and try to run the virtual machine inside of 
-there. It may give you more debugging messages.
+Currently migrating to lucid64 before doing a release. 
+lucid64 was recently added to vagrant as a default development environment, as well it supported on an ec2 small instance. If you are still developing with maverick64 (which is default now) there is a branch available for that.
 
 
 Steps:
 
     sudo gem install vagrant 
+or 
+Manually download form here: http://downloads.vagrantup.com/
+
 
     git clone https://github.com/tlpinney/osmdevbox.git 
     cd osmdevbox 
     vagrant up 
 
 This will download the box image if its not already there 
-It will start the vm, installing any neccesary software 
+It will start the vm, installing any necessary software 
 
     vagrant ssh 
 
@@ -35,18 +33,21 @@ Start up the development server
     cd openstreetmap-website
     rails server 
 
-On your host machine go to to access the rails port http://127.0.0.1:3000
-and go to http://127.0.0.1:9080 to access the leaflet osm debugger currently
-this is stub code tha shows an osm map 
-
+On your host machine go to to access the rails port 
+    http://127.0.0.1:3000
+and go to 
+    http://127.0.0.1:9080 
+to access the leaflet osm debugger (currently just a stub)
+ 
 There is a bug where the apache2 server will need to be restarted manually 
-if the vm is installe from scratch...
+if the vm is installed from scratch...
 
 GeoDjango
 Does not automatically install 
 To install (do this inside the vm)
 
     sudo puppet apply /vagrant/manifests/geodjango.pp
+
 after this is done, do 
 
     cd
