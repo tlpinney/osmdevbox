@@ -43,15 +43,17 @@ this is stub code tha shows an osm map
 There is a bug where the apache2 server will need to be restarted manually 
 if the vm is installe from scratch...
 
-# GeoDjango
-# Does not automatically install 
-# To install (do this inside the vm)
-sudo puppet apply /vagrant/manifests/geodjango.pp
-# after this is done, do 
-cd
-source virtualenvs/geodjango/bin/activate
-cd demo 
-python manage.py runserver 0.0.0.0:9081 
+GeoDjango
+Does not automatically install 
+To install (do this inside the vm)
+
+    sudo puppet apply /vagrant/manifests/geodjango.pp
+after this is done, do 
+
+    cd
+    source virtualenvs/geodjango/bin/activate
+    cd demo 
+    python manage.py runserver 0.0.0.0:9081 
 
 To stop the vm
     vagrant halt 
