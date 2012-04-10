@@ -1,0 +1,6 @@
+Caveats:
+
+Make sure you have virtualization extensions enabled in your BIOS. It may not run if this is not set up, and you will want to be running on a 64bit system.
+
+Running ubuntu 11.10 I ran into an issue with current user not being in "vboxusers" (so it failed to start. If your vm hangs when running "vagrant up", open up the virtualbox program and try to run the virtual machine inside of there. It may give you more debugging messages.
+
