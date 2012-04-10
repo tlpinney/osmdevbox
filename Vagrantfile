@@ -9,7 +9,7 @@ Vagrant::Config.run do |config|
 
 config.vm.customize [
   "modifyvm", :id,
-  "--name", "OpenStreetMap Dev VM v0.2",
+  "--name", "OpenStreetMap Dev VM v0.9.2",
   "--memory", "2048"
 ] 
 
