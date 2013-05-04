@@ -3,8 +3,8 @@
 
 Vagrant::Config.run do |config|
 
-  config.vm.box = "maverick64"
-  config.vm.box_url = "https://s3.amazonaws.com/osmdevbox/maverick64.box"
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
  
 
 config.vm.customize [

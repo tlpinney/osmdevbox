@@ -13,9 +13,6 @@ user { "vagrant":
   managehome => true,
 }
 
-Exec["/usr/bin/apt-get update -y"] -> Package <| |>
-Exec["/usr/bin/apt-get upgrade -y"] -> Package <| |>
-
 exec { "/usr/bin/apt-get update -y":
   user => "root",
   timeout => 3600,
@@ -71,7 +68,7 @@ package { "apache2-dev":
   ensure => installed,
 }
 
-package { "libmagick9-dev":
+package { "graphicsmagick-libmagick-dev-compat":
   ensure => installed,
 }
 
