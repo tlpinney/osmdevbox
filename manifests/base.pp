@@ -24,108 +24,11 @@ exec { "/usr/bin/apt-get upgrade -y":
   require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
-package { "git-core":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "vim":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "postgresql-contrib":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-
-package { "ruby":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "rdoc":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "ri":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "libpq-dev":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "libxml2-dev":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "libxslt1-dev":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "ruby-dev":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "apache2-dev":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "graphicsmagick-libmagick-dev-compat":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "build-essential":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "libopenssl-ruby":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "subversion":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "apache2":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "postgresql-9.1": 
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "libcurl4-openssl-dev":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "expect":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "expect-dev":
-  ensure => installed,
-  require => [ Exec["/usr/bin/apt-get update -y"] ]
-}
-
-package { "libsasl2-dev":
+package { ["git-core", "vim", "postgresql-contrib", "ruby", "rdoc", "ri",
+           "libpq-dev", "libxml2-dev", "libxslt1-dev", "ruby-dev", "apache2-dev",
+           "graphicsmagick-libmagick-dev-compat", "build-essential", "libopenssl-ruby",
+           "subversion", "apache2", "postgresql-9.1", "libcurl4-openssl-dev",
+           "expect", "expect-dev", "libsasl2-dev", "wget" ]:
   ensure => installed,
   require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
