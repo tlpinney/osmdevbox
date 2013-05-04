@@ -2,7 +2,6 @@
 
 # bootstrap
 sudo apt-get -y install git-core ruby
-git clone https://github.com/tlpinney/osmdevbox.git 
 git clone https://github.com/puppetlabs/puppet.git
 wget http://files.rubyforge.vm.bytemark.co.uk/rubygems/rubygems-1.3.7.tgz
 tar -xzvf rubygems-1.3.7.tgz 
@@ -14,5 +13,5 @@ sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
 # sudo apt-get install puppet -y 
 
 # run puppet scripts
-sudo puppet apply -v osmdevbox/manifests/base.pp
+sudo puppet apply -v /vagrant/manifests/base.pp
 
