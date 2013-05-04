@@ -21,95 +21,118 @@ exec { "/usr/bin/apt-get update -y":
 exec { "/usr/bin/apt-get upgrade -y":
   user => "root",
   timeout => 3600,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "git-core":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "vim":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "postgresql-contrib":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 
 package { "ruby":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "rdoc":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "ri":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "libpq-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "libxml2-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "libxslt1-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "ruby-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "apache2-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "graphicsmagick-libmagick-dev-compat":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "build-essential":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "libopenssl-ruby":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "subversion":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "apache2":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
-package { "postgresql": 
+package { "postgresql-9.1": 
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "libcurl4-openssl-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "expect":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "expect-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "libsasl2-dev":
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 package { "wget" :
   ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 service { "apache2":
