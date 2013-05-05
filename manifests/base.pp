@@ -13,9 +13,6 @@ user { "vagrant":
   managehome => true,
 }
 
-Exec["/usr/bin/apt-get update -y"] -> Package <| |>
-Exec["/usr/bin/apt-get upgrade -y"] -> Package <| |>
-
 exec { "/usr/bin/apt-get update -y":
   user => "root",
   timeout => 3600,
@@ -24,95 +21,17 @@ exec { "/usr/bin/apt-get update -y":
 exec { "/usr/bin/apt-get upgrade -y":
   user => "root",
   timeout => 3600,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
-package { "git-core":
+package { ["git-core", "vim", "postgresql-contrib", "ruby", "rdoc", "ri",
+           "libpq-dev", "libxml2-dev", "libxslt1-dev", "ruby-dev", "apache2-dev",
+           "graphicsmagick-libmagick-dev-compat", "build-essential", "libopenssl-ruby",
+           "subversion", "apache2", "postgresql-9.1", "libcurl4-openssl-dev",
+           "expect", "expect-dev", "libsasl2-dev", "wget", "libapache2-mod-passenger",
+           "ruby-bundler", "rake" ]:
   ensure => installed,
-}
-
-package { "vim":
-  ensure => installed,
-}
-
-package { "postgresql-contrib":
-  ensure => installed,
-}
-
-
-package { "ruby":
-  ensure => installed,
-}
-
-package { "rdoc":
-  ensure => installed,
-}
-
-package { "ri":
-  ensure => installed,
-}
-
-package { "libpq-dev":
-  ensure => installed,
-}
-
-package { "libxml2-dev":
-  ensure => installed,
-}
-
-package { "libxslt1-dev":
-  ensure => installed,
-}
-
-package { "ruby-dev":
-  ensure => installed,
-}
-
-package { "apache2-dev":
-  ensure => installed,
-}
-
-package { "libmagick9-dev":
-  ensure => installed,
-}
-
-package { "build-essential":
-  ensure => installed,
-}
-
-package { "libopenssl-ruby":
-  ensure => installed,
-}
-
-package { "subversion":
-  ensure => installed,
-}
-
-package { "apache2":
-  ensure => installed,
-}
-
-package { "postgresql": 
-  ensure => installed,
-}
-
-package { "libcurl4-openssl-dev":
-  ensure => installed,
-}
-
-package { "expect":
-  ensure => installed,
-}
-
-package { "expect-dev":
-  ensure => installed,
-}
-
-package { "libsasl2-dev":
-  ensure => installed,
-}
-
-package { "wget" :
-  ensure => installed,
+  require => [ Exec["/usr/bin/apt-get update -y"] ]
 }
 
 service { "apache2":
@@ -127,14 +46,6 @@ exec { "osm_git":
   command => "/usr/bin/git clone https://github.com/openstreetmap/openstreetmap-website.git",
   creates => "/home/vagrant/openstreetmap-website",
   require => [Package["git-core"]],
-}
-
-file { "/etc/apache2/conf.d/passenger" :
-  owner => root,
-  group => root,
-  source => "/vagrant/configs/passenger",
-  mode => 644,
-  require => [Package["apache2"]],
 }
 
 file { "/etc/apache2/sites-available/default" :
@@ -177,37 +88,6 @@ exec { "Set up database":
   require => [ Package["postgresql-contrib"] ]
 }
 
-exec { "passenger":
-  cwd => "/home/vagrant",
-  user => "vagrant",
-  command => "sudo gem install passenger --no-ri --no-rdoc && touch /home/vagrant/passenger.log",
-  creates => "/home/vagrant/passenger.log",
-  logoutput => "true",
-  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-  require => [File["/home/vagrant/openstreetmap-website/config/application.yml"]]
-}
-
-exec { "pfusion":
-  cwd => "/home/vagrant",
-  user => "vagrant",
-  command => "expect /vagrant/manifests/pfusion.exp && touch /home/vagrant/pfusion.log",
-  creates => "/home/vagrant/pfusion.log",
-  logoutput => "true",
-  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"],
-  timeout => 3600,  
-  require => [Exec["passenger"]]
-}
-
-exec { "bundle_gem":
-  cwd => "/home/vagrant",
-  user => "vagrant",
-  command => "sudo gem install bundle --no-ri --no-rdoc; touch /home/vagrant/bundle_gem.log",
-  creates => "/home/vagrant/bundle_gem.log",
-  logoutput => "true",
-  path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-  require => [Exec["pfusion"]]
-} 
-
 exec { "bundle":
   cwd => "/home/vagrant/openstreetmap-website",
   user => "vagrant",
@@ -215,7 +95,7 @@ exec { "bundle":
   creates => "/home/vagrant/bundle.log",
   logoutput => "true",
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-  require => [Exec["bundle_gem"]]
+  require => [Exec["osm_git"]]
 } 
 
 exec { "rake_migrate":
@@ -225,7 +105,7 @@ exec { "rake_migrate":
   creates => "/home/vagrant/rake_migrate.log",
   logoutput => "true",
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin"], 
-  require => [Exec["bundle"]]
+  require => [Exec["bundle"], File["/home/vagrant/openstreetmap-website/config/application.yml"], Exec["Set up database"]]
 }
 
 exec { "set_up_osm_website_directories":
